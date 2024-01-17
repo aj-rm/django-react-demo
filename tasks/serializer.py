@@ -15,3 +15,5 @@ class TaskSerializer(serializers.ModelSerializer):
         #     'completed',
         # )
         fields = '__all__'
+
+        read_only_fields = ('id',)
