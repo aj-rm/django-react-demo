@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     'tasks',
 
     # Third party apps
-    'rest_framework', # Django REST Framework
-    'corsheaders', # CORS Headers
+    'rest_framework',   # Django REST Framework
+    'corsheaders',      # CORS Headers
+    'coreapi',          # Core API
+    'drf_spectacular',  # DRF Spectacular
 ]
 
 MIDDLEWARE = [
@@ -131,5 +133,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS Settings
 CORS_ALLOWED_ORIGINS = [
-    
+    'http://localhost:5173'
 ]
+
+
+# REST Framework Settings
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+
+# DRF Spectacular Settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Django-React API Demo',
+    'DESCRIPTION': 'A demo of Django-React API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
