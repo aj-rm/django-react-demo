@@ -4,6 +4,35 @@ from rest_framework.response import Response
 from .serializer import TaskSerializer
 from .models import *
 
+from django.contrib.auth import login
+from rest_framework import permissions
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from knox.views import LoginView as KnoxLoginView
+from knox.models import AuthToken
+
+
+class LoginView(KnoxLoginView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        _, token = AuthToken.objects.create(user)
+        
+        token_instance = AuthToken.objects.get(token_key=token[:8])
+
+        data = {
+            'token': token,
+            'expiry': token_instance.expiry,
+            'username': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+        }
+
+        return Response(data)
+
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
@@ -67,12 +96,15 @@ class TaskViewSet(viewsets.ModelViewSet):
     
 
     def get_queryset(self):
-        queryset = Task.objects.all()
-        completed = self.request.query_params.get('completed')
+        if self.request.user.has_perm('tasks.view_task'): # or self.request.user.is_anonymous:
+            queryset = Task.objects.all()
+            completed = self.request.query_params.get('completed')
 
-        if completed is not None:
-            if completed.lower() == 'true' or completed == '1':
-                queryset = queryset.filter(completed=True)
+            if completed is not None:
+                if completed.lower() == 'true' or completed == '1':
+                    queryset = queryset.filter(completed=True)
 
-        return queryset
+            return queryset
+        
+        return Task.objects.none()
     

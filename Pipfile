@@ -9,6 +9,7 @@ djangorestframework = "*"
 django-cors-headers = "*"
 coreapi = "*"
 drf-spectacular = "*"
+django-rest-knox = "*"
 
 [dev-packages]
 

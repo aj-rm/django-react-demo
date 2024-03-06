@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'corsheaders',      # CORS Headers
     'coreapi',          # Core API
     'drf_spectacular',  # DRF Spectacular
+    # 'rest_framework.authtoken', # Django REST Framework Auth Token
+    'knox',             # Knox Token Authentication
 ]
 
 MIDDLEWARE = [
@@ -140,6 +142,9 @@ CORS_ALLOWED_ORIGINS = [
 # REST Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'knox.auth.TokenAuthentication',
+    ],
 }
 
 
