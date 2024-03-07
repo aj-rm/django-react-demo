@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+
+  app:
+    image: django-react_front
+    build: ./react-client
+    command: npm run dev --host
+    ports:
+      - 5173:5173
+    volumes:
+      - ./react-client:/app
+      - /app/node_modules
+    depends_on:
+      - api
+
+
+  api:
+    image: django-react_back
+    build: ./
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/api
+    env_file:
+      - ./.env
+    depends_on:
+      - postgres_db
+
+
+  postgres_db:
+    image: postgres
+    # ports:
+    #   - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: djdocker
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+
+volumes:
+  postgres-data:

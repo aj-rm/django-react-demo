@@ -96,7 +96,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     
 
     def get_queryset(self):
-        if self.request.user.has_perm('tasks.view_task'): # or self.request.user.is_anonymous:
+        if self.request.user.has_perm('tasks.view_task') or self.request.user.is_anonymous:
             queryset = Task.objects.all()
             completed = self.request.query_params.get('completed')
 
