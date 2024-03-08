@@ -11,6 +11,7 @@ coreapi = "*"
 drf-spectacular = "*"
 django-rest-knox = "*"
 psycopg2 = "*"
+gunicorn = "*"
 
 [dev-packages]
 
